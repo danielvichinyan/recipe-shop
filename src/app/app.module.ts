@@ -16,7 +16,7 @@ import { DropdownDirective } from './shared/directives/dropdown.directive';
 import { shoppingListReducer } from './store/reducers/shopping-list.reducer';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
-import { RecipesService } from './recipes/services/recipes.service';
+import { HttpClientModule } from '@angular/common/http';
 import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
@@ -40,9 +40,10 @@ import { AuthComponent } from './auth/auth.component';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    HttpClientModule,
     StoreModule.forRoot({ shoppingList: shoppingListReducer })
   ],
-  providers: [RecipesService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
