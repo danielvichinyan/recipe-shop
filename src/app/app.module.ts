@@ -13,7 +13,6 @@ import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-ed
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { DropdownDirective } from './shared/directives/dropdown.directive';
-import { ShoppingListService } from './shopping-list/services/shopping-list.service';
 import { shoppingListReducer } from './store/reducers/shopping-list.reducer';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
@@ -41,7 +40,7 @@ import { RecipesService } from './recipes/services/recipes.service';
     AppRoutingModule,
     StoreModule.forRoot({ shoppingList: shoppingListReducer })
   ],
-  providers: [ShoppingListService, RecipesService],
+  providers: [RecipesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
