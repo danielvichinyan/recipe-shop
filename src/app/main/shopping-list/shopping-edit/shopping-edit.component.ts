@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Ingredient } from 'src/app/shared/payload/ingredient.model';
-import * as ShoppingListActions from '../../store/actions/shopping-list.actions';
+import * as ShoppingListActions from '../../../store/actions/shopping-list.actions';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import * as fromShoppingList from '../../store/reducers/shopping-list.reducer';
+import * as fromShoppingList from '../../../store/reducers/shopping-list.reducer';
 
 @Component({
   selector: 'app-shopping-edit',

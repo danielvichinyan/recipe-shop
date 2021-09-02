@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthResponseData } from './payload/auth.response';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -12,7 +15,10 @@ export class AuthComponent implements OnInit {
   isLoading: boolean = false;
   error: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {}
 
@@ -27,21 +33,26 @@ export class AuthComponent implements OnInit {
     const email = form.value.email;
     const password = form.value.password;
 
-    this.isLoading = true; // start spinner 
+    this.isLoading = true; // start spinner
+
+    let authObservable: Observable<AuthResponseData>;
 
     if (this.isLoginMode) {
-
+      authObservable = this.authService.login(email, password); // login
     } else {
-      this.authService.signup(email, password).subscribe(
-        (response) => {
-          this.isLoading = false; // stop spinner 
-        },
-        errorMessage => {
-          this.error = errorMessage;
-          this.isLoading = false; // stop spinner 
-        }
-      );
+      authObservable = this.authService.signup(email, password); // register
     }
+
+    authObservable.subscribe(
+      (response) => {
+        this.isLoading = false; // stop spinner
+        this.router.navigate(['/recipes']);
+      },
+      (errorMessage) => {
+        this.error = errorMessage;
+        this.isLoading = false; // stop spinner
+      }
+    );
 
     form.reset();
   }

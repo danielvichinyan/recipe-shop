@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { Ingredient } from '../shared/payload/ingredient.model';
-import * as fromShoppingList from '../store/reducers/shopping-list.reducer';
-import * as ShoppingListActions from '../store/actions/shopping-list.actions';
+import { Ingredient } from '../../shared/payload/ingredient.model';
+import * as fromShoppingList from '../../store/reducers/shopping-list.reducer';
+import * as ShoppingListActions from '../../store/actions/shopping-list.actions';
 
 @Component({
   selector: 'app-shopping-list',

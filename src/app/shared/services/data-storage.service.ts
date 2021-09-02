@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Recipe } from 'src/app/recipes/payload/recipe.model';
-import { RecipesService } from 'src/app/recipes/services/recipes.service';
+import { Recipe } from 'src/app/main/recipes/payload/recipe.model';
+import { RecipesService } from 'src/app/main/recipes/services/recipes.service';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable({
