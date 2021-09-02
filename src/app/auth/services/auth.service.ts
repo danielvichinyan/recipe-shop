@@ -5,15 +5,22 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { AuthResponseData } from '../payload/auth.response';
 import { User } from '../payload/user.model';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/reducers/app.reducer';
+import * as AuthActions from '../../store/actions/auth.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  user = new BehaviorSubject<User>(null);
+  // user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   signup(email: string, password: string) {
     return this.http
@@ -84,19 +91,27 @@ export class AuthService {
 
     // this also checks if token is expired or not
     if (loadedUser.token) {
-      this.user.next(loadedUser);
+      this.store.dispatch(
+        new AuthActions.Login({
+          email: loadedUser.email,
+          userId: loadedUser.id,
+          token: loadedUser.token,
+          expirationDate: new Date(userData._tokenExpirationDate),
+        })
+      );
 
       // future date - the current date gives us the time when the token will expire
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();
-        
+
       this.autoLogout(expirationDuration);
     }
   }
 
   logout() {
-    this.user.next(null);
+    this.store.dispatch(new AuthActions.Logout());
+
     this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
 
@@ -125,7 +140,14 @@ export class AuthService {
 
     const user = new User(email, userId, token, expirationDate);
 
-    this.user.next(user); // send the user
+    this.store.dispatch(
+      new AuthActions.Login({
+        email: email,
+        userId: userId,
+        token: token,
+        expirationDate: expirationDate,
+      })
+    );
 
     this.autoLogout(expiresIn * 1000); // set when the token will expire
 

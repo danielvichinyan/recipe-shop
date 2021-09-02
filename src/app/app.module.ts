@@ -7,7 +7,7 @@ import { StoreModule } from '@ngrx/store';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // Reducers
-import { shoppingListReducer } from './store/reducers/shopping-list.reducer';
+import * as fromApp from './store/reducers/app.reducer';
 
 // Components
 import { AppComponent } from './app.component';
@@ -26,6 +26,8 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 // Directives
 import { DropdownDirective } from './shared/directives/dropdown.directive';
 import { AuthInterceptorService } from './auth/interceptors/auth-interceptor.service';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './store/effects/auth.effect';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,8 @@ import { AuthInterceptorService } from './auth/interceptors/auth-interceptor.ser
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({ shoppingList: shoppingListReducer }),
+    StoreModule.forRoot(fromApp.appReducer),
+    EffectsModule.forRoot([AuthEffects])
   ],
   providers: [
     {
