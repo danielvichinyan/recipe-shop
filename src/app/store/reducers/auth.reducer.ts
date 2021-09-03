@@ -7,7 +7,7 @@ export interface State {
   loading: boolean;
 }
 
-// same as auth service - user behavior subject
+// Same as auth service - user behavior subject
 const initialState: State = {
   user: null,
   authError: null,

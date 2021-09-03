@@ -1,9 +1,11 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Recipe } from 'src/app/main/recipes/payload/recipe.model';
-import * as RecipesActions from '../actions/recipe.actions';
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import * as RecipesActions from '../actions/recipe.actions';
+import * as fromApp from '../reducers/app.reducer';
 
 @Injectable()
 export class RecipeEffects {
@@ -30,5 +32,26 @@ export class RecipeEffects {
     );
   });
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  storeRecipes = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(RecipesActions.STORE_RECIPES),
+        withLatestFrom(this.store.select('recipes')), // merge value from another observable to this observable
+        switchMap(([actionData, recipesState]) => {
+          // first element is action and second is the array of recipes which we get via withLatestFrom
+          return this.http.put(
+            'https://recipe-book-d8de5-default-rtdb.europe-west1.firebasedatabase.app/recipes.json',
+            recipesState.recipes
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private store: Store<fromApp.AppState>
+  ) {}
 }

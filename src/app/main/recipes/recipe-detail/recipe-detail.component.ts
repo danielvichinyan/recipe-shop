@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Recipe } from '../payload/recipe.model';
-import { RecipesService } from '../services/recipes.service';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store/reducers/app.reducer';
 import * as RecipesActions from '../../../store/actions/recipe.actions';
+import * as ShoppingListActions from '../../../store/actions/shopping-list.actions';
 import { map, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -17,7 +17,6 @@ export class RecipeDetailComponent implements OnInit {
   id: number;
 
   constructor(
-    private recipesService: RecipesService,
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<fromApp.AppState>
@@ -29,18 +28,22 @@ export class RecipeDetailComponent implements OnInit {
       .pipe(
         map((params) => {
           return +params['id']; // return and get the id from the path params
-        }), 
-        switchMap((id) => { // create another observable and pass the id
+        }),
+        switchMap((id) => {
+          // create another observable and pass the id
           this.id = id;
           return this.store.select('recipes'); // return the recipes state from the store
         }),
-        map((recipesState) => { // get the recipes state
-          return recipesState.recipes.find((recipe, index) => { // find the recipe with the same id
+        map((recipesState) => {
+          // get the recipes state
+          return recipesState.recipes.find((recipe, index) => {
+            // find the recipe with the same id
             return index === this.id; // return that recipe
           });
         })
       )
-      .subscribe((recipe) => { // subscribe to the observable that carries the found recipe
+      .subscribe((recipe) => {
+        // subscribe to the observable that carries the found recipe
         this.recipe = recipe;
       });
 
@@ -64,7 +67,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onAddToShoppingList() {
-    this.recipesService.addIngredientsToShoppingList(this.recipe.ingredients);
+    this.store.dispatch(new ShoppingListActions.AddIngredients(this.recipe.ingredients));
   }
 
   onEditRecipe() {
@@ -72,7 +75,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onDeleteRecipe() {
-    this.recipesService.deleteRecipe(this.id);
+    this.store.dispatch(new RecipesActions.DeleteRecipe(this.id));
     this.router.navigate(['/recipes']);
   }
 }
