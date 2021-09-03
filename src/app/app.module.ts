@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 // Reducers
 import * as fromApp from './store/reducers/app.reducer';
@@ -28,6 +30,8 @@ import { DropdownDirective } from './shared/directives/dropdown.directive';
 import { AuthInterceptorService } from './auth/interceptors/auth-interceptor.service';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/effects/auth.effect';
+import { environment } from '../environments/environment';
+import { RecipeEffects } from './store/effects/recipe.effect';
 
 @NgModule({
   declarations: [
@@ -52,8 +56,10 @@ import { AuthEffects } from './store/effects/auth.effect';
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects])
+    StoreModule.forRoot(fromApp.appReducer), // npm install --save @ngrx/store
+    EffectsModule.forRoot([AuthEffects, RecipeEffects]), // npm install --save @ngrx/effects
+    StoreDevtoolsModule.instrument({ logOnly: environment.production }), // npm install --save-dev @ngrx/store-devtols
+    StoreRouterConnectingModule.forRoot() // npm install --save @ngrx/router-store 
   ],
   providers: [
     {
